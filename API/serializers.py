@@ -38,18 +38,4 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    def validate_username(self, value):
-        request = self.context.get('request')
-        if request and request.method in ['PUT', 'PATCH']:
-            user_id = request.parser_context['kwargs']['pk']
-            if CustomUser.objects.filter(username=value).exclude(id=user_id).exists():
-                raise serializers.ValidationError("Este nombre de usuario ya existe. Ingresa un nuevo nombre de usuario.")
-        return value
 
-    def validate_email(self, value):
-        request = self.context.get('request')
-        if request and request.method in ['PUT', 'PATCH']:
-            user_id = request.parser_context['kwargs']['pk']
-            if CustomUser.objects.filter(email=value).exclude(id=user_id).exists():
-                raise serializers.ValidationError("Este correo electrónico ya está registrado. Ingresa un nuevo correo electrónico.")
-        return value
