@@ -42,7 +42,10 @@ class UserSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if request and request.method in ['PUT', 'PATCH']:
             user_id = request.parser_context['kwargs']['pk']
-            if CustomUser.objects.filter(username=value).exclude(id=user_id).exists():
+            if CustomUser.objects.filter(username=value, is_active=True).exclude(id=user_id).exists():
+                raise serializers.ValidationError("Este nombre de usuario ya existe. Ingresa un nuevo nombre de usuario.")
+        else:
+            if CustomUser.objects.filter(username=value, is_active=True).exists():
                 raise serializers.ValidationError("Este nombre de usuario ya existe. Ingresa un nuevo nombre de usuario.")
         return value
 
@@ -50,6 +53,9 @@ class UserSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if request and request.method in ['PUT', 'PATCH']:
             user_id = request.parser_context['kwargs']['pk']
-            if CustomUser.objects.filter(email=value).exclude(id=user_id).exists():
+            if CustomUser.objects.filter(email=value, is_active=True).exclude(id=user_id).exists():
+                raise serializers.ValidationError("Este correo electrónico ya está registrado. Ingresa un nuevo correo electrónico.")
+        else:
+            if CustomUser.objects.filter(email=value, is_active=True).exists():
                 raise serializers.ValidationError("Este correo electrónico ya está registrado. Ingresa un nuevo correo electrónico.")
         return value
