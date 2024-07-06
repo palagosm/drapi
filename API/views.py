@@ -56,10 +56,8 @@ def eliminar_usuario(request, pk):
         return Response({"error": "Usuario no encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'DELETE':
-        usuario.is_active = False
-        usuario.save()
+        usuario.delete()
         return Response({"message": "Usuario eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)
-
 
 @api_view(['POST'])
 def autenticar_usuario(request):
