@@ -53,11 +53,17 @@ def eliminar_usuario(request, pk):
     try:
         usuario = CustomUser.objects.get(pk=pk)
     except CustomUser.DoesNotExist:
-        return Response({"error": "Usuario no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+        response = Response({"error": "Usuario no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+        response['Cache-Control'] = 'no-cache'
+        response['Pragma'] = 'no-cache'
+        return response
 
     if request.method == 'DELETE':
         usuario.delete()
-        return Response({"message": "Usuario eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)
+        response = Response({"message": "Usuario eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)
+        response['Cache-Control'] = 'no-cache'
+        response['Pragma'] = 'no-cache'
+        return response
 
 @api_view(['POST'])
 def autenticar_usuario(request):
